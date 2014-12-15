@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    url: "jdbc:mysql://{{ data_alias }}/cluster-data"
+    username: "cluster-app"
+    password: "cluster-password"
+    driverClassName: "com.mysql.jdbc.Driver"
+  jpa:
+    database: "MYSQL"
+    show-sql: true
+    hibernate:
+      ddl-auto: "update"
+      dialect: "org.hibernate.dialect.MySQL5Dialect"
+  data:
+    elasticsearch:
+      cluster-nodes: "{{ index_alias }}:9300"
+      cluster-name: "{{ es_cluster_name }}"

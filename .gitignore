@@ -1,0 +1,5 @@
+.idea
+*.iml
+target
+app/service/cluster-app.yml
+app/tests/cluster-tests.properties

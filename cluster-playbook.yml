@@ -1,0 +1,63 @@
+---
+- hosts: localhost
+  vars:
+    data_hostname: "cluster-data"
+    data_alias: "db"
+    index_hostname: "cluster-index"
+    index_alias: "index"
+    app_hostname: "cluster-app"
+    app_alias: "app"
+    es_cluster_name: "cluster-index"
+
+  tasks:
+  - name: create data image
+    docker_image: path="data" name="lgueye/cluster-data" state=present
+
+  - name: run data container
+    docker: name="{{ data_hostname }}" hostname="{{ data_hostname }}" image="lgueye/{{ data_hostname }}" state=running
+
+  - name: create index image
+    docker_image: path="index" name="lgueye/cluster-index" state=present
+
+  - name: run index container
+    docker: name="{{ index_hostname }}" hostname="{{ index_hostname }}" image="lgueye/{{ index_hostname }}" state=running
+
+  - name: create domain executable
+    shell: "cd app/domain && mvn clean install"
+
+  - name: interpolate cluster-app.yml server configuration
+    template: src=cluster-app.yml.j2 dest=app/service/cluster-app.yml
+
+  - name: create app executable
+    shell: "cd app/service && mvn clean package"
+
+  - name: create app image
+    docker_image: path="app/service" name="lgueye/cluster-app" state=present
+
+  - name: run app container
+    docker: name="{{ app_hostname }}" hostname={{ app_hostname }} image="lgueye/{{ app_hostname }}" links={{data_hostname}}:{{data_alias}},{{index_hostname}}:{{index_alias}} state=running
+
+  - name: save app IP adress
+    set_fact: "app-ip={{item.NetworkSettings.IPAddress}}"
+    with_items: docker_containers
+
+  - name: interpolate cluster-tests.properties server configuration
+    template: src=cluster-tests.properties.j2 dest=app/tests/cluster-tests.properties
+
+#  - name: stop app container
+#    docker: name="cluster-app" image="lgueye/cluster-app" state=absent
+#
+#  - name: delete app image
+#    docker_image: path="app" name="lgueye/cluster-app" state=absent
+
+#  - name: stop index container
+#    docker: name="cluster-index" image="lgueye/cluster-index" state=absent
+
+#  - name: delete index image
+#    docker_image: path="index" name="lgueye/cluster-index" state=absent
+
+#  - name: stop data container
+#    docker: name="cluster-data" image="lgueye/cluster-data" state=absent
+
+#  - name: delete data image
+#    docker_image: path="data" name="lgueye/cluster-data" state=absent

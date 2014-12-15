@@ -1,0 +1,19 @@
+h1. Ansible Cluster
+
+h2. A proof of concept intended for production-oriented java developers that need to setup multi-nodes environments and build/test an application against it
+
+Ansible cluster includes the following features:
+
+* Support for multi-nodes application
+** A relational database ("MySQL":http://www.mysql.com/)
+** An index ("Elasticsearch":http://www.elasticsearch.org/)
+** An application server ("Spring Boot":http://projects.spring.io/spring-boot/)
+* Support for lightweight container with "Docker":https://www.docker.com/
+** Build containers
+** Link containers.
+* Support for nodes lifecycle/configuration/provisioning with "Ansible":http://www.ansible.com/
+** Shared variables across cluster
+** Docker module
+** Jinja2 interpolation
+* Support for testing
+** Run test suite with "Maven":http://maven.apache.org/
