@@ -1,6 +1,6 @@
 package org.diveintojee.poc.ansiblecluster;
 
-import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.diveintojee.poc.ansiblecluster.domain.Domain;
 
 public class Fixtures {

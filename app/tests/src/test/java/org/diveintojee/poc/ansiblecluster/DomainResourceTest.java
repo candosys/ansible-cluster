@@ -60,7 +60,7 @@ public class DomainResourceTest {
 
 
     @Test
-    public void searchRecipesShouldMatchDescription() throws IOException {
+    public void searchDomainsShouldMatchDescription() throws IOException {
 
         // Given
         api.deleteAllDomains();
@@ -76,7 +76,7 @@ public class DomainResourceTest {
     }
 
     @Test
-    public void searchRecipesShouldMatchTitle() throws IOException {
+    public void searchDomainsShouldMatchTitle() throws IOException {
 
         // Given
         api.deleteAllDomains();
@@ -92,7 +92,7 @@ public class DomainResourceTest {
     }
 
     @Test
-    public void findAllRecipesShouldSucceed() throws IOException {
+    public void findAllDomainsShouldSucceed() throws IOException {
 
         // Given
         api.deleteAllDomains();
