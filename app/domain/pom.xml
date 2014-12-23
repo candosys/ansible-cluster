@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.diveintojee.poc.org.diveintojee.poc.ansiblecluster</groupId>
         <artifactId>cluster-root</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>0.0.2-SNAPSHOT</version>
     </parent>
     <artifactId>cluster-domain</artifactId>
     <name>cluster-domain</name>
