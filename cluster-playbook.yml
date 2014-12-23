@@ -23,19 +23,19 @@
     docker: name="{{ index_hostname }}" hostname="{{ index_hostname }}" image="lgueye/{{ index_hostname }}" state=running
 
   - name: create domain executable
-    shell: "cd app/domain && mvn clean install"
+    shell: "mvn clean install -f app/domain/pom.xml"
+
+  - name: create app executable
+    shell: "mvn clean install -f app/service/pom.xml"
 
   - name: interpolate cluster-app.yml server configuration
     template: src=cluster-app.yml.j2 dest=app/service/cluster-app.yml
-
-  - name: create app executable
-    shell: "cd app/service && mvn clean package"
 
   - name: create app image
     docker_image: path="app/service" name="lgueye/cluster-app" state=present
 
   - name: run app container
-    docker: name="{{ app_hostname }}" hostname={{ app_hostname }} image="lgueye/{{ app_hostname }}" links={{data_hostname}}:{{data_alias}},{{index_hostname}}:{{index_alias}} state=running
+    docker: name="{{ app_hostname }}" hostname={{ app_hostname }} image="lgueye/{{ app_hostname }}" links={{data_hostname}}:{{data_alias}},{{index_hostname}}:{{index_alias}} volumes="{{ basedir }}/app/service:/opt/service" state=running
 
   - name: save app IP adress
     set_fact: "app-ip={{item.NetworkSettings.IPAddress}}"
@@ -43,6 +43,12 @@
 
   - name: interpolate cluster-tests.properties server configuration
     template: src=cluster-tests.properties.j2 dest=app/tests/cluster-tests.properties
+
+  - name: pause 20 seconds
+    pause: seconds=20
+
+  - name: test executable
+    shell: "mvn clean install -f app/tests/pom.xml"
 
 #  - name: stop app container
 #    docker: name="cluster-app" image="lgueye/cluster-app" state=absent
