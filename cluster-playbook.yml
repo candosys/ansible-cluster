@@ -48,7 +48,7 @@
     pause: seconds=20
 
   - name: test executable
-    shell: "mvn clean install -f app/tests/pom.xml"
+    shell: "mvn clean install -Prun-tests -f app/tests/pom.xml"
 
 #  - name: stop app container
 #    docker: name="cluster-app" image="lgueye/cluster-app" state=absent
