@@ -1,5 +1,6 @@
 .idea
 *.iml
 target
+data/data-vars.yml
 app/service/cluster-app.yml
 app/tests/cluster-tests.properties

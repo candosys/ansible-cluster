@@ -5,6 +5,9 @@
     data_hostname: "cluster-data"
     data_alias: "db"
     data_image_name: "{{docker_userid}}/{{data_hostname}}"
+    db_name: "cluster-data"
+    db_user: "cluster-app"
+    db_admin_user: "root"
     index_hostname: "cluster-index"
     index_alias: "index"
     index_image_name: "{{docker_userid}}/{{index_hostname}}"
@@ -16,42 +19,45 @@
     app_container_basedir: "/opt/service"
 
   tasks:
+  - name: interpolate data-vars.yml.j2
+    template: src=data/data-vars.yml.j2 dest=data/data-vars.yml
+
   - name: create data image
     docker_image: path="data" name={{data_image_name}}  state=present
 
   - name: run data container
     docker: name="{{ data_hostname }}" hostname="{{ data_hostname }}" image={{data_image_name}} state=running
 
-  - name: create index image
-    docker_image: path="index" name="{{index_image_name}}" state=present
-
-  - name: run index container
-    docker: name="{{ index_hostname }}" hostname="{{ index_hostname }}" image="{{index_image_name}}" state=running
-
-  - name: create app executable
-    shell: "mvn clean install -f app/service/pom.xml"
-
-  - name: interpolate cluster-app.yml server configuration
-    template: src=cluster-app.yml.j2 dest=app/service/cluster-app.yml
-
-  - name: create app image
-    docker_image: path="app/service" name="{{app_image_name}}" state=present
-
-  - name: run app container
-    docker: name="{{ app_hostname }}" hostname={{ app_hostname }} image="{{ app_image_name }}" links={{data_hostname}}:{{data_alias}},{{index_hostname}}:{{index_alias}} volumes="{{ basedir }}/app/service:{{app_container_basedir}}" command="java -jar {{app_container_basedir}}/target/cluster-app.jar --spring.config.name=cluster-app --spring.config.location={{app_container_basedir}}/" expose="{{ app_port }}" state=running
-
-  - name: pause 15 seconds
-    pause: seconds=15
-
-  - name: save app IP adress
-    set_fact: "app-ip={{item.NetworkSettings.IPAddress}}"
-    with_items: docker_containers
-
-  - name: interpolate cluster-tests.properties server configuration
-    template: src=cluster-tests.properties.j2 dest=app/tests/cluster-tests.properties
-
-  - name: test executable
-    shell: "mvn verify -Prun-tests -f app/tests/pom.xml"
+#  - name: create index image
+#    docker_image: path="index" name="{{index_image_name}}" state=present
+#
+#  - name: run index container
+#    docker: name="{{ index_hostname }}" hostname="{{ index_hostname }}" image="{{index_image_name}}" state=running
+#
+#  - name: create app executable
+#    shell: "mvn clean install -f app/service/pom.xml"
+#
+#  - name: interpolate cluster-app.yml server configuration
+#    template: src=cluster-app.yml.j2 dest=app/service/cluster-app.yml
+#
+#  - name: create app image
+#    docker_image: path="app/service" name="{{app_image_name}}" state=present
+#
+#  - name: run app container
+#    docker: name="{{ app_hostname }}" hostname={{ app_hostname }} image="{{ app_image_name }}" links={{data_hostname}}:{{data_alias}},{{index_hostname}}:{{index_alias}} volumes="{{ basedir }}/app/service:{{app_container_basedir}}" command="java -jar {{app_container_basedir}}/target/cluster-app.jar --spring.config.name=cluster-app --spring.config.location={{app_container_basedir}}/" expose="{{ app_port }}" state=running
+#
+#  - name: pause 15 seconds
+#    pause: seconds=15
+#
+#  - name: save app IP adress
+#    set_fact: "app-ip={{item.NetworkSettings.IPAddress}}"
+#    with_items: docker_containers
+#
+#  - name: interpolate cluster-tests.properties server configuration
+#    template: src=cluster-tests.properties.j2 dest=app/tests/cluster-tests.properties
+#
+#  - name: test executable
+#    shell: "mvn verify -Prun-tests -f app/tests/pom.xml"
 
 #  - name: stop app container
 #    docker: name="{{ app_hostname }}" image="{{ app_image_name }}" state=absent

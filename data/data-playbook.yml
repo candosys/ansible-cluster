@@ -1,11 +1,8 @@
 ---
 - hosts: localhost
 
-  vars:
-  - db_name: "cluster-data"
-  - db_user: "cluster-app"
-  - db_user_password: "cluster-password"
-  - db_root_password: ""
+  vars_files:
+    - "data-vars.yml"
 
   tasks:
     - name: remove mysql packages
@@ -29,8 +26,8 @@
       service: name=mysql state=restarted
 
     - name: create a database
-      mysql_db: login_user=root login_password={{ db_root_password }} name={{ db_name }} collation=utf8_general_ci encoding=utf8 state=present
+      mysql_db: login_user={{db_admin_user}} login_password={{ db_admin_password }} name={{ db_name }} collation=utf8_general_ci encoding=utf8 state=present
 
     - name: create a database user
-      mysql_user: login_user=root login_password={{ db_root_password }} name={{ db_user }} password={{ db_user_password }} priv="{{ db_name }}.*:ALL" host='%' state=present
+      mysql_user: login_user={{db_admin_user}} login_password={{ db_admin_password }} name={{ db_user }} password={{ db_user_password }} priv="{{ db_name }}.*:ALL" host='%' state=present
 
