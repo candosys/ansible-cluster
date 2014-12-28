@@ -11,6 +11,7 @@ RUN mkdir /opt/playbook
 ADD app-playbook.yml /opt/playbook/app-playbook.yml
 RUN ansible-playbook --inventory-file=/etc/ansible/hosts /opt/playbook/app-playbook.yml
 RUN echo "Done provisioning app cluster"
-EXPOSE 8080
-ENTRYPOINT ["/bin/bash", "-c", "java -jar /opt/service/target/cluster-app-0.0.2-SNAPSHOT.jar --spring.config.name=cluster-app --spring.config.location=/opt/service/"]
+#EXPOSE 8080
+#ENTRYPOINT ["/bin/bash", "-c", "java -jar /opt/service/target/cluster-app-0.0.2-SNAPSHOT.jar --spring.config.name=cluster-app --spring.config
+#.location=/opt/service/"]
 
