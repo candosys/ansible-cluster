@@ -39,30 +39,30 @@
   - name: run index container
     docker: name="{{ index_hostname }}" hostname="{{ index_hostname }}" image="{{index_image_name}}" state=running
 
-#  - name: create app executable
-#    shell: "mvn clean install -f app/service/pom.xml"
-#
-#  - name: interpolate cluster-app.yml server configuration
-#    template: src=app/service/cluster-app.yml.j2 dest=app/service/cluster-app.yml
-#
-#  - name: create app image
-#    docker_image: path="app/service" name="{{app_image_name}}" state=present
-#
-#  - name: run app container
-#    docker: name="{{ app_hostname }}" hostname={{ app_hostname }} image="{{ app_image_name }}" links={{data_hostname}}:{{data_alias}},{{index_hostname}}:{{index_alias}} volumes="{{ basedir }}/app/service:{{app_container_basedir}}" command="java -jar {{app_container_basedir}}/target/cluster-app.jar --spring.config.name=cluster-app --spring.config.location={{app_container_basedir}}/" expose="{{ app_port }}" state=running
-#
-#  - name: pause 15 seconds
-#    pause: seconds=15
-#
-#  - name: save app IP adress
-#    set_fact: "app-ip={{item.NetworkSettings.IPAddress}}"
-#    with_items: docker_containers
-#
-#  - name: interpolate cluster-tests.properties server configuration
-#    template: src=app/tests/cluster-tests.properties.j2 dest=app/tests/cluster-tests.properties
-#
-#  - name: test executable
-#    shell: "mvn verify -Prun-tests -f app/tests/pom.xml"
+  - name: create app executable
+    shell: "mvn clean install -f app/service/pom.xml"
+
+  - name: interpolate app/service/cluster-app.yml.j2
+    template: src=app/service/cluster-app.yml.j2 dest=app/service/cluster-app.yml
+
+  - name: create app image
+    docker_image: path="app/service" name="{{app_image_name}}" state=present
+
+  - name: run app container
+    docker: name="{{ app_hostname }}" hostname={{ app_hostname }} image="{{ app_image_name }}" links={{data_hostname}}:{{data_alias}},{{index_hostname}}:{{index_alias}} volumes="{{ basedir }}/app/service:{{app_container_basedir}}" command="java -jar {{app_container_basedir}}/target/cluster-app.jar --spring.config.name=cluster-app --spring.config.location={{app_container_basedir}}/" expose="{{ app_port }}" state=running
+
+  - name: pause 15 seconds
+    pause: seconds=15
+
+  - name: save app IP adress
+    set_fact: "app-ip={{item.NetworkSettings.IPAddress}}"
+    with_items: docker_containers
+
+  - name: interpolate app/tests/cluster-tests.properties.j2
+    template: src=app/tests/cluster-tests.properties.j2 dest=app/tests/cluster-tests.properties
+
+  - name: test executable
+    shell: "mvn verify -Prun-tests -f app/tests/pom.xml"
 
 #  - name: stop app container
 #    docker: name="{{ app_hostname }}" image="{{ app_image_name }}" state=absent
