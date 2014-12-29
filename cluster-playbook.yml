@@ -38,7 +38,7 @@
 #    shell: "mvn clean install -f app/service/pom.xml"
 #
 #  - name: interpolate cluster-app.yml server configuration
-#    template: src=cluster-app.yml.j2 dest=app/service/cluster-app.yml
+#    template: src=app/service/cluster-app.yml.j2 dest=app/service/cluster-app.yml
 #
 #  - name: create app image
 #    docker_image: path="app/service" name="{{app_image_name}}" state=present
@@ -54,7 +54,7 @@
 #    with_items: docker_containers
 #
 #  - name: interpolate cluster-tests.properties server configuration
-#    template: src=cluster-tests.properties.j2 dest=app/tests/cluster-tests.properties
+#    template: src=app/tests/cluster-tests.properties.j2 dest=app/tests/cluster-tests.properties
 #
 #  - name: test executable
 #    shell: "mvn verify -Prun-tests -f app/tests/pom.xml"
