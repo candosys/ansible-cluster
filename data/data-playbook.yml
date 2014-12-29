@@ -26,8 +26,8 @@
       service: name=mysql state=restarted
 
     - name: create a database
-      mysql_db: login_user={{db_admin_user}} login_password={{ db_admin_password }} name={{ db_name }} collation=utf8_general_ci encoding=utf8 state=present
+      mysql_db: login_user={{db.admin_user}} login_password={{ db.admin_password }} name={{ db.name }} collation=utf8_general_ci encoding=utf8 state=present
 
     - name: create a database user
-      mysql_user: login_user={{db_admin_user}} login_password={{ db_admin_password }} name={{ db_user }} password={{ db_user_password }} priv="{{ db_name }}.*:ALL" host='%' state=present
+      mysql_user: login_user={{db.admin_user}} login_password={{ db.admin_password }} name={{ db.user }} password={{ db.user_password }} priv="{{ db.name }}.*:ALL" host='%' state=present
 
