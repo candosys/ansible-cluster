@@ -17,3 +17,7 @@ Ansible cluster includes the following features:
 ** Jinja2 interpolation
 * Support for testing
 ** Run test suite with "Maven":http://maven.apache.org/
+
+h2. Running command
+
+* ansible-playbook --inventory-file=/etc/ansible/hosts cluster-playbook.yml -e "basedir=$(pwd)" -e "db_user_password=secret" -e "db_admin_password="
