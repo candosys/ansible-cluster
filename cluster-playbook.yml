@@ -12,6 +12,8 @@
     index_alias: "index"
     index_image_name: "{{docker_userid}}/{{index_hostname}}"
     es_cluster_name: "{{index_hostname}}"
+    es_version: 1.3
+    es_mlockall: true
     app_hostname: "cluster-app"
     app_alias: "app"
     app_image_name: "{{docker_userid}}/{{app_hostname}}"
@@ -28,12 +30,15 @@
   - name: run data container
     docker: name="{{ data_hostname }}" hostname="{{ data_hostname }}" image={{data_image_name}} state=running
 
-#  - name: create index image
-#    docker_image: path="index" name="{{index_image_name}}" state=present
-#
-#  - name: run index container
-#    docker: name="{{ index_hostname }}" hostname="{{ index_hostname }}" image="{{index_image_name}}" state=running
-#
+  - name: interpolate index-vars.yml.j2
+    template: src=index/index-vars.yml.j2 dest=index/index-vars.yml
+
+  - name: create index image
+    docker_image: path="index" name="{{index_image_name}}" state=present
+
+  - name: run index container
+    docker: name="{{ index_hostname }}" hostname="{{ index_hostname }}" image="{{index_image_name}}" state=running
+
 #  - name: create app executable
 #    shell: "mvn clean install -f app/service/pom.xml"
 #

@@ -9,6 +9,7 @@ RUN apt-get update
 RUN apt-get install -y ansible
 RUN mkdir /opt/playbook
 ADD index-playbook.yml /opt/playbook/index-playbook.yml
+ADD index-vars.yml /opt/playbook/index-vars.yml
 ADD elasticsearch.yml.j2 /opt/playbook/elasticsearch.yml.j2
 RUN ansible-playbook --inventory-file=/etc/ansible/hosts /opt/playbook/index-playbook.yml
 RUN echo "Done provisioning index cluster"

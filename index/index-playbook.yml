@@ -1,9 +1,8 @@
 ---
 - hosts: localhost
-  vars:
-    es_version: 1.3
-    es_mlockall: true
-    es_cluster_name: cluster-index
+
+  vars_files:
+    - "index-vars.yml"
 
   tasks:
     - name: add repo for java 8
