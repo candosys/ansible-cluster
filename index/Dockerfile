@@ -1,12 +1,5 @@
-FROM ubuntu:14.04
+FROM lgueye/oracle-jdk8
 MAINTAINER louis.gueye@gmail.com
-RUN apt-get update
-RUN apt-get install -y python-software-properties
-RUN apt-get install -y software-properties-common
-RUN apt-get update
-RUN apt-add-repository ppa:ansible/ansible
-RUN apt-get update
-RUN apt-get install -y ansible
 RUN mkdir /opt/playbook
 ADD index-playbook.yml /opt/playbook/index-playbook.yml
 ADD index-vars.yml /opt/playbook/index-vars.yml
