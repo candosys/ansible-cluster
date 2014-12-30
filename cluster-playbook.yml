@@ -3,16 +3,18 @@
   vars:
     docker_userid: "lgueye"
     data_hostname: "cluster-data"
+    data_port: 3306
     data_alias: "db"
     data_image_name: "{{docker_userid}}/{{data_hostname}}"
     db_name: "cluster-data"
     db_user: "cluster-app"
     db_admin_user: "root"
     index_hostname: "cluster-index"
+    index_discovery_port: 9300
+    index_http_port: 9200
     index_alias: "index"
     index_image_name: "{{docker_userid}}/{{index_hostname}}"
     es_cluster_name: "{{index_hostname}}"
-    es_version: 1.3
     es_mlockall: true
     app_hostname: "cluster-app"
     app_alias: "app"
@@ -28,7 +30,7 @@
     docker_image: path="data" name={{data_image_name}}  state=present
 
   - name: run data container
-    docker: name="{{ data_hostname }}" hostname="{{ data_hostname }}" image={{data_image_name}} state=running
+    docker: name="{{ data_hostname }}" hostname="{{ data_hostname }}" image={{data_image_name}} ports="{{data_port}}" command="/usr/bin/mysqld_safe" state=running
 
   - name: interpolate index-vars.yml.j2
     template: src=index/index-vars.yml.j2 dest=index/index-vars.yml
@@ -37,7 +39,7 @@
     docker_image: path="index" name="{{index_image_name}}" state=present
 
   - name: run index container
-    docker: name="{{ index_hostname }}" hostname="{{ index_hostname }}" image="{{index_image_name}}" state=running
+    docker: name="{{ index_hostname }}" hostname="{{ index_hostname }}" image="{{index_image_name}}" ports="{{index_http_port}},{{index_discovery_port}}" command="/usr/share/elasticsearch/bin/elasticsearch -Des.default.config=/etc/elasticsearch/elasticsearch.yml -Des.default.path.home=/usr/share/elasticsearch -Des.default.path.logs=/var/log/elasticsearch -Des.default.path.data=/var/lib/elasticsearch -Des.default.path.work=/tmp/elasticsearch -Des.default.path.conf=/etc/elasticsearch" state=running
 
   - name: create app executable
     shell: "mvn clean install -f app/service/pom.xml"
