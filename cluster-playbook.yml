@@ -53,8 +53,8 @@
   - name: run app container
     docker: name="{{ app_hostname }}" hostname={{ app_hostname }} image="{{ app_image_name }}" links={{data_hostname}}:{{data_alias}},{{index_hostname}}:{{index_alias}} volumes="{{ basedir }}/app/service:{{app_container_basedir}}" command="java -jar {{app_container_basedir}}/target/cluster-app.jar --spring.config.name=cluster-app --spring.config.location={{app_container_basedir}}/" expose="{{ app_port }}" state=running
 
-  - name: pause 15 seconds
-    pause: seconds=15
+  - name: pause 8 seconds
+    pause: seconds=8
 
   - name: save app IP adress
     set_fact: "app-ip={{item.NetworkSettings.IPAddress}}"
