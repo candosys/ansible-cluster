@@ -20,4 +20,4 @@ Ansible cluster includes the following features:
 
 h2. Running command
 
-* mvn clean install -f app/service/pom.xml && ansible-playbook --inventory-file=/etc/ansible/hosts cluster-playbook.yml -e "basedir=$(pwd)" -e "db_user_password=secret" -e "db_admin_password=" && mvn verify -Prun-tests -f app/tests/pom.xml
+* @mvn clean install -f app/service/pom.xml && ansible-playbook --inventory-file=/etc/ansible/hosts cluster-playbook.yml -e "basedir=$(pwd)" -e "db_user_password=secret" -e "db_admin_password=" && mvn verify -Prun-tests -f app/tests/pom.xml@
